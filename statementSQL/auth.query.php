@@ -41,7 +41,7 @@ class AuthQuery extends Connection{
             return 0;
         }
     }
-    //comentario
+    
     public function desactivateToken($user_id, $token){
         $query = "UPDATE user_token SET status= 0 WHERE user_id = $user_id and token <> '". $token ."';";
         return parent::statement($query);
