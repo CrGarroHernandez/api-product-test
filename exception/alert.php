@@ -5,7 +5,7 @@ class Alert{
     private $response = [
         "result" => array()
     ];
-
+    //Alert ok
     public function customSuccess($string){
         $this->response['result'] = array(
             "status" =>"Ok",
