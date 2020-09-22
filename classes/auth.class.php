@@ -48,7 +48,7 @@ class Auth{
                             $result = $this->authQuery->generateToken($user[0]['id']);
                             if($result){
                                 $this->authQuery->desactivateToken($user[0]['id'], $result);
-                                return $this->alert->customSuccess("Token '". $result. "' generated successfully");
+                                return $this->alert->customSuccess($result);
                             }else{
                                 return $this->alert->serverError_500();
                             }
