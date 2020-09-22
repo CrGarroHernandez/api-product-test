@@ -33,32 +33,37 @@ class Auth{
             return $this->alert->clientError_400();
         }else{
             $email = $data['email'];
-            $password = $this->authQuery->encryptPass($data['password']);
-            $user = $this->authQuery->getUser($email);
-            if($user){
-                // si existe
-                if($password == $user[0]['password']){
-                    //consultamos si el usuario esta activo
-                    if($user[0]['status'] == 1){
-                        //creamos el token
-                        $result = $this->authQuery->generateToken($user[0]['id']);
-                        if($result){
-                            $this->authQuery->desactivateToken($user[0]['id'], $result);
-                            return $this->alert->customSuccess("Token '". $result. "' generated successfully");
+            $pass = $data['password'];
+            if($email == '' || $pass == ''){
+                return $this->alert->customError("You must provide an email and password");
+            }else{
+                $password = $this->authQuery->encryptPass($pass);
+                $user = $this->authQuery->getUser($email);
+                if($user){
+                    // si existe
+                    if($password == $user[0]['password']){
+                        //consultamos si el usuario esta activo
+                        if($user[0]['status'] == 1){
+                            //creamos el token
+                            $result = $this->authQuery->generateToken($user[0]['id']);
+                            if($result){
+                                $this->authQuery->desactivateToken($user[0]['id'], $result);
+                                return $this->alert->customSuccess("Token '". $result. "' generated successfully");
+                            }else{
+                                return $this->alert->serverError_500();
+                            }
                         }else{
-                            return $this->alert->serverError_500();
+                            //usuario inactivo
+                            return $this->alert->customError("The user ". $email. " is inactive");
                         }
                     }else{
-                        //usuario inactivo
-                        return $this->alert->customError("The user ". $email. " is inactive");
+                        //return "contra mala"; 
+                        return $this->alert->customError("Invalid password");
                     }
                 }else{
-                    //return "contra mala"; 
-                    return $this->alert->customError("Invalid password");
+                    //no existe
+                    return $this->alert->customError("Username ". $email ." does not exist");
                 }
-            }else{
-                //no existe
-                return $this->alert->customError("Username ". $email ." does not exist");
             }
         }
     }
