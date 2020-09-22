@@ -26,7 +26,7 @@ class Auth{
 
         $this->token = "";
     }
-
+    //function login
     public function login($json){
         $data = json_decode($json, true);
         if(!isset($data['email']) || !isset($data['password'])){
